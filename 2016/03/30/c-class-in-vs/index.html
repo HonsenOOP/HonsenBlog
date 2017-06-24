@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在VS中C++类的声明与定义 | Honsen</title>
+
+  
+  <meta name="author" content="Honsen">
+  
+
+  
+  <meta name="description" content="现在看着有点尴尬，不过还是老老实实一起迁移过来了…
+
+貌似是第一篇关于代码的文章，有点惭愧啊。算了不扯了，直接进入正题。
+第一篇是关于C++的，起因在于我们正在进行的数据结构课程，第一次实验课的内容是要我们用线性表来解决约瑟夫环问题。问题本身是不难的，难住我的却是如何写一个 链表的模板类。
+约瑟夫环">
+  
+
+  
+  
+  <meta name="keywords" content="C++,VS">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="在VS中C++类的声明与定义"/>
+
+  <meta property="og:site_name" content="Honsen"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Honsen" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Honsen</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>在VS中C++类的声明与定义</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/03/30/c-class-in-vs/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-03-30T06:57:57.000Z">
+          2016-03-30
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>现在看着有点尴尬，不过还是老老实实一起迁移过来了…</p>
+<hr>
+<p>貌似是第一篇关于代码的文章，有点惭愧啊。算了不扯了，直接进入正题。</p>
+<p>第一篇是关于C++的，起因在于我们正在进行的数据结构课程，第一次实验课的内容是要我们用线性表来解决约瑟夫环问题。问题本身是不难的，难住我的却是如何写一个 链表的模板类。</p>
+<p>约瑟夫环问题用链表来做更好一些，本来想实现一个线性表并不难，没想到 卡在了C++的模板类上Orz。。。最后无奈之下为了交作业，写了个int的链表急急忙忙交了上去。然后留着问题慢慢搞。下面贴出我第一次遇到的蛋疼的报错信息：</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/51215448.jpg" alt=""></p>
+<p>链接时错误了，这是什么意思，以前没遇到过。测试了一下，发现只要是SInglyList的函数在main函数中被调用都会报这种错，这特么就很尴尬了。说明函数定义的内容本身是没问题的，那错误会在哪里呢？向匡老师求救，觉得可能是构造函数的问题，导致建立对象的时候失败了，所以对象调用函数时自然会出现错误。</p>
+<p>嗯，不愧匡老师，说的好像有那么一丝道理，我找了找我的构造函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</div><div class="line">	SingleNode&lt;E&gt;* temp = <span class="keyword">new</span> SingleNode&lt;E&gt;(<span class="literal">NULL</span>,<span class="literal">NULL</span>);</div><div class="line">	head = temp;</div><div class="line">	tail = head;</div><div class="line">	curr = head;</div><div class="line">	size = <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line">SinglyList() &#123;</div><div class="line">	init();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我一度认为是初始化指针变量时的问题，然后一直思考自定义的变量初始化时的正确姿势Orz…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SingleNode&lt;E&gt;* temp;</div><div class="line">temp = new SingleNode&lt;E&gt;(NULL,NULL);</div></pre></td></tr></table></figure>
+<p>然后换成了上面这个23333，C++prime白看了，不过的确排查的时候找出来一些地方写的不规范。。。</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/19036203.jpg" alt=""></p>
+<p>然而上面的这些都不是关键，当我觉得我的代码已经很完美的时候，还是报这样的蜜汁错误Orz…</p>
+<p>于是我新开了一个工程慢慢的复制，运行，企图发现到底哪里出了问题。</p>
+<p>在我一次实验中，在声明函数时先定义了一个内联函数print()然后其他的函数都是在另一个.cpp文件中定义的。结果发现只有调用这个内联函数的时候不会出错，啧，难道是只能内联函数可以？这特么不讲道理啊。我再写了一个函数定义在头文件中，当然，不是内联。然后调用这个函数就完美的运行了。。Orz</p>
+<p>麻！萨！卡！定义和实现都只能放在头文件中？这不讲道理啊，之前在eclipse中写的套路都是声明在头文件中，定义在源文件中。一时无法解释这个问题，不过问题算是解决了，错误消除了。（我们只解决问题，不解释问题<img src="http://olx8425kh.bkt.clouddn.com/17-6-24/55881352.jpg" alt="">）</p>
+<p>默默贴几段代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> E&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SinglyList</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">	SinglyList() &#123;</div><div class="line">		init();</div><div class="line">	&#125;</div><div class="line">	~SinglyList() &#123;</div><div class="line">		removeall();</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">append</span><span class="params">(E)</span></span>;<span class="comment">//追加</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(E)</span></span>;<span class="comment">//插入</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span></span>;<span class="comment">//移除当前结点</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">alter</span><span class="params">(E)</span></span>;<span class="comment">//修改当前结点的值</span></div><div class="line">	<span class="function"><span class="keyword">int</span> <span class="title">currPos</span><span class="params">()</span></span>;<span class="comment">//返回当前结点的位置</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">moveToStart</span><span class="params">()</span></span>;<span class="comment">//将当前结点移动到head</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">moveToEnd</span><span class="params">()</span></span>;<span class="comment">//将当前结点移动到tail</span></div><div class="line">	<span class="function"><span class="keyword">const</span> E&amp; <span class="title">getValue</span><span class="params">()</span><span class="keyword">const</span></span>;<span class="comment">//取得当前结点的值</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;<span class="comment">//清除所有结点 并重新初始化链表</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;<span class="comment">//遍历打印所有结点的值</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span></span>;<span class="comment">//当前结点后移一位</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">prev</span><span class="params">()</span></span>;<span class="comment">//当前结点前移一位</span></div><div class="line">	</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	SingleNode&lt;E&gt;* head;<span class="comment">//头节点 无数据</span></div><div class="line">	SingleNode&lt;E&gt;* tail;<span class="comment">//尾结点 有数据</span></div><div class="line">	SingleNode&lt;E&gt;* curr;<span class="comment">//</span></div><div class="line">	<span class="keyword">int</span> size;</div><div class="line">	<span class="comment">//初始化时 实例化一个结点，然后head、tail、curr都为它</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</div><div class="line">		SingleNode&lt;E&gt;* temp;</div><div class="line">		temp = <span class="keyword">new</span> SingleNode&lt;E&gt;(<span class="literal">NULL</span>,<span class="literal">NULL</span>);</div><div class="line">		head = temp;</div><div class="line">		tail = head;</div><div class="line">		curr = head;</div><div class="line">		size = <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">removeall</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span> (head != <span class="literal">NULL</span>) &#123;</div><div class="line">			curr = head;</div><div class="line">			head = head-&gt;next;</div><div class="line">			<span class="keyword">delete</span> curr;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<hr>
+<p>黄总对此发表评论：因为 template 的代码都要在编译的时候根据类型参数去生成啊 如果分开写的话编译的时候代码还没产生于是就炸了</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C-VS/">C++,VS</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 Honsen
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

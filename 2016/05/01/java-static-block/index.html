@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Java静态代码块的问题 | Honsen</title>
+
+  
+  <meta name="author" content="Honsen">
+  
+
+  
+  <meta name="description" content="自己测试的一点小例子，觉得有点充数的嫌疑
+
+劳动节嘛就是劳动的节日（大雾
+晚上把之前iteye里面的东西搬过来了，虽然很惭愧原本就没有写多少东西。
+(不过搬完发现，之前写的东西真的看不下去啊，，TM，就搬一个好了
+
+在查看别人代码的时候 看到了 static静态代码块 ?之后经过搜索和自己的亲试，下">
+  
+
+  
+  
+  <meta name="keywords" content="Java">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Java静态代码块的问题"/>
+
+  <meta property="og:site_name" content="Honsen"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Honsen" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Honsen</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Java静态代码块的问题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/05/01/java-static-block/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-05-01T08:00:08.000Z">
+          2016-05-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>自己测试的一点小例子，觉得有点充数的嫌疑</p>
+<hr>
+<p>劳动节嘛就是劳动的节日（大雾</p>
+<p>晚上把之前iteye里面的东西搬过来了，虽然很惭愧原本就没有写多少东西。</p>
+<p><del>(不过搬完发现，之前写的东西真的看不下去啊，，TM，就搬一个好了</del></p>
+<hr>
+<p>在查看别人代码的时候 看到了 static静态代码块 ?之后经过搜索和自己的亲试，下面贴出测试代码和解释。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestA</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"父类--静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">TestA</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"父类--构造方法"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	&#123;</div><div class="line">		System.out.println(<span class="string">"父类--非静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> TestB();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestB</span> <span class="keyword">extends</span> <span class="title">TestA</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"子类--静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line">	&#123;</div><div class="line">		System.out.println(<span class="string">"子类--非静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Test</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"子类--构造方法"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跑起来的结果是：</p>
+<p>父类–静态代码块</p>
+<p>子类–静态代码块</p>
+<p>父类–非静态代码块</p>
+<p>父类–构造方法</p>
+<p>子类–非静态代码块</p>
+<p>子类–构造方法</p>
+<p>在这个代码中，代码的执行顺序，就是 在主类中首先执行static静态代码块中的代码，同理，之后在主函数中 建立了TestB对象，在执行构造函数之前，首先查看TestB中是否有static静态块，之后首先执行了静态代码块中的代码。当TestB的静态代码 块执行完毕之后，它接着又去看A有没有非静态代码块，如果有就执行A类的非静态代码块，A的非静态代码块执行完毕，接着执行A的构造方法；A的构造方法执 行完毕之后，它接着去看B有没有非静态代码块，如果有就执行B的非静态代码块。B类的非静态代码块执行完毕再去执行B类的构造方法，这个就是一个对象的初 始化顺序。<br>噫，，写出来了好像挺麻烦的。。大致就是 1静态代码块 ?–&gt;2非静态代码块 ?–&gt;3构造方法</p>
+<p>然后进行了有一个测试：</p>
+<p>这个测试是测试是否一定是静态块先执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestA2</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> TestA2 a = <span class="keyword">new</span> TestA2();</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"父类--静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">TestA2</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"父类--构造方法"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	&#123;</div><div class="line">		System.out.println(<span class="string">"父类--非静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> TestB2();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestB2</span> <span class="keyword">extends</span> <span class="title">TestA2</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> TestB2 b = <span class="keyword">new</span> TestB2();</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"子类--静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line">	&#123;</div><div class="line">		System.out.println(<span class="string">"子类--非静态代码块"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">TestB2</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"子类--构造方法"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<p>父类–非静态代码块</p>
+<p>父类–构造方法</p>
+<p>父类–静态代码块</p>
+<p>父类–非静态代码块</p>
+<p>父类–构造方法</p>
+<p>子类–非静态代码块</p>
+<p>子类–构造方法</p>
+<p>子类–静态代码块</p>
+<p>父类–非静态代码块</p>
+<p>父类–构造方法</p>
+<p>子类–非静态代码块</p>
+<p>子类–构造方法</p>
+<p>这里先new了一个 静态的对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> TestA2 a = <span class="keyword">new</span> TestA2();</div></pre></td></tr></table></figure>
+<p>而 在静态代码块和创建静态对象时，是按照 代码的顺序执行的，就是说 需要执行完 这个创建对象的语句才能执行下面的 静态代码块中的语句。所以给人的感觉像是“跳过了”静态代码块，所以一开始是：1非静态代码块2构造方法。之后执行完了 创建对象的语句，继续执行，即静态代码块。之后就是在主类中创建一个TestB2对象，像上面的测试一样，不同的也只是在执行创建对象语句静态代码块和顺 序的问题。而执行了两次非静态代码和构造方法的原因就是，一次是创建静态对象时，一次是执行完静态方法后的执行。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h4><p>对 象的初始化顺序:首先执行父类静态的内容，父类静态的内容执行完毕后，接着去执行子类的静态的内容，当子类的静态内容执行完毕之后，再去看父类有没有非静 态代码块，如果有就执行父类的非静态代码块，父类的非静态代码块执行完毕，接着执行父类的构造方法；父类的构造方法执行完毕之后，它接着去看子类有没有非 静态代码块，如果有就执行子类的非静态代码块。子类的非静态代码块执行完毕再去执行子类的构造方法。总之一句话，静态代码块内容先执行，接着执行父类非静 态代码块和构造方法，然后执行子类非静态代码块和构造方法。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Java/">Java</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 Honsen
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

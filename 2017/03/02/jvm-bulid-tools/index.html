@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>写个JVM构建工具相关的吧（总是要写点什么的） | Honsen</title>
+
+  
+  <meta name="author" content="Honsen">
+  
+
+  
+  <meta name="description" content="Ant、Maven、Gradle的东西在笔记里放了好久了，现在拿出来写写。
+
+在两只狼和一只狗的时代。
+人们编译和运行还是靠着重复敲打着gcc和javac，这显然是件不够”优雅”的事情。于是，上帝说，要有光，世界便有了光——make出来。
+make帮助人们批量的编译文件，或者说是构建工程。
+而作为一">
+  
+
+  
+  
+  <meta name="keywords" content="JVM,Java,Maven,Ant">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="写个JVM构建工具相关的吧（总是要写点什么的）"/>
+
+  <meta property="og:site_name" content="Honsen"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Honsen" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Honsen</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>写个JVM构建工具相关的吧（总是要写点什么的）</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/03/02/jvm-bulid-tools/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-03-02T08:21:15.000Z">
+          2017-03-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Ant、Maven、Gradle的东西在笔记里放了好久了，现在拿出来写写。</p>
+<hr>
+<p>在两只狼和一只狗的时代。</p>
+<p>人们编译和运行还是靠着重复敲打着gcc和javac，这显然是件不够”优雅”的事情。于是，上帝说，要有光，世界便有了光——make出来。</p>
+<p>make帮助人们批量的编译文件，或者说是构建工程。</p>
+<p>而作为一个主要写Java的程序员，也有JVM生态圈中的构建工具。</p>
+<p>主要是3个Ant、Maven、Gradle</p>
+<h2 id="Ant"><a href="#Ant" class="headerlink" title="Ant"></a>Ant</h2><p>Apache Ant是一款基于Java的构建工具，Java实现，也意味着有很好的跨平台性。开始是转为tomcat设计的，使用xml，比makefile更加简洁，后被广泛应用。</p>
+<h3 id="1-安装与配置"><a href="#1-安装与配置" class="headerlink" title="1.安装与配置"></a>1.安装与配置</h3><p>在这里找到相应的压缩包，下载解压就好了，然后配置环境变量。没什么不同的。当然，之前也得配好jdk。</p>
+<p>之后呼出cmd，输入ant -version。可显示版本号就可以了。</p>
+<h3 id="2-构建ant实例"><a href="#2-构建ant实例" class="headerlink" title="2.构建ant实例"></a>2.构建ant实例</h3><p>让我们脱离ide，用回最原始的javac和java。</p>
+<p>例如这里</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd workspace  </div><div class="line">md anttest &amp; cd anttest</div><div class="line">md src &amp; md bin &amp;cd src <span class="comment">#src 放置源代码，bin放置.class文件</span></div><div class="line">notepad HelloAnt.java</div></pre></td></tr></table></figure>
+<p>之后随便写点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloAnt</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Hello Ant!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#在项目路径 anttest下</span></div><div class="line">javac -sourcepath src -d bin src\HelloAnt.java <span class="comment">#两个参数是指明源代码路径和.class文件路径 最后是编译的目标文件</span></div><div class="line">java -cp bin HelloAnt <span class="comment">#-cp即 classpath 执行</span></div></pre></td></tr></table></figure>
+<p>之后就可以看到Hello Ant了。（啊，上面似乎是废话。。</p>
+<p>也尝试了使用直接打包成jar，不过还要手动写mainfest，这里不写了，直接用ant。</p>
+<p>ant中核心的就是build.xml文件</p>
+<p>build.xml的结构如下:</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-3-2/44938037-file_1488451183317_934d.png" alt="img"></p>
+<p>允许有且只有一个project元素，其中有多个target，每个target作为task的集合存在。</p>
+<p>下面定义了四个target：</p>
+<p>– clean 清除编译文件以及相关的目录</p>
+<p>– compile 编译src中的文件 并放入指定的classpath</p>
+<p>– jar 打包成jar</p>
+<p>– run 运行</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">name</span>=<span class="string">"anttest"</span> <span class="attr">default</span>=<span class="string">"run"</span> <span class="attr">basedir</span>=<span class="string">"."</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">description</span>&gt;</span>Building Simple Java Applications Without An IDE<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">   </div><div class="line">   <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"clean"</span> <span class="attr">description</span>=<span class="string">"clean class file"</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">delete</span> <span class="attr">dir</span> =<span class="string">"exe"</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">   <span class="comment">&lt;!--编译的target，执行编译命令--&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"compile"</span></span></div><div class="line">           <span class="attr">description</span>=<span class="string">"Compile the Java code."</span>&gt;</div><div class="line">      <span class="tag">&lt;<span class="name">mkdir</span> <span class="attr">dir</span> =<span class="string">"bin"</span>/&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">javac</span> <span class="attr">srcdir</span>=<span class="string">"src"</span></span></div><div class="line">             <span class="attr">destdir</span>=<span class="string">"bin"</span></div><div class="line">             <span class="attr">debug</span>=<span class="string">"true"</span></div><div class="line">      <span class="attr">includeantruntime</span>=<span class="string">"false"</span> /&gt;</div><div class="line">   <span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">   <span class="comment">&lt;!--打包的命令，依赖于compile的target，即需要执行compile的--&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span> =<span class="string">"jar"</span> <span class="attr">depends</span>=<span class="string">"compile"</span> </span></div><div class="line">           <span class="attr">description</span>=<span class="string">"to jar"</span>&gt;</div><div class="line">        <span class="tag">&lt;<span class="name">mkdir</span> <span class="attr">dir</span> =<span class="string">"exe"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">jar</span> <span class="attr">destfile</span> = <span class="string">"exe/HelloAnt.jar"</span> <span class="attr">basedir</span> =<span class="string">"bin"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">attribute</span> <span class="attr">name</span> = <span class="string">"Main-Class"</span> <span class="attr">value</span> = <span class="string">"HelloAnt"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">jar</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">target</span>&gt;</span> 	</div><div class="line"></div><div class="line">   <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"run"</span> <span class="attr">depends</span>=<span class="string">"clean,compile,jar"</span></span></div><div class="line">           <span class="attr">description</span>=<span class="string">"Run the Java application."</span>&gt;</div><div class="line">      <span class="tag">&lt;<span class="name">java</span> <span class="attr">classname</span>=<span class="string">"HelloAnt"</span> <span class="attr">fork</span>=<span class="string">"true"</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">classpath</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">pathelement</span> <span class="attr">path</span>=<span class="string">"bin"</span>/&gt;</span></div><div class="line">         <span class="tag">&lt;/<span class="name">classpath</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">java</span>&gt;</span></div><div class="line"> </div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>target是自定义的，不是说一定会有这几个name，想要执行某一条target，可以键入</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ant clean</div><div class="line">ant run</div><div class="line">ant      <span class="comment">#默认执行build.xml中name为run的target</span></div></pre></td></tr></table></figure>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-3-2/38595328-file_1488451565666_cfbf.png" alt="img"></p>
+<p>xml中的元素，清晰明了，每一个target中定义了实现的命令。</p>
+<p>xml中的元素，清晰明了，每一个target中定义了实现的命令。</p>
+<p>关于这些标签可以去<a href="http://blog.leanote.com/post/honsen/ant%E6%A0%87%E7%AD%BE%E9%9B%86" target="_blank" rel="external">这里</a>了解。</p>
+<p>通过上面这个例子进行了简单项目的简单构建，在感受到简单清晰之后，也发现了一个问题，那就是随着模块的增加，bulid.xml会变得很大。</p>
+<p>这也是ant一个很明显的缺点。</p>
+<p>Ivy是Apache另外一个开源项目，主要解决构建中的依赖问题。他可以和Ant完美集成，所以常常一起使用，这里也放在Ant下面进行讨论。</p>
+<p>上面的例子是个很简单的例子，也不需要有外部的依赖，如果需要用到外部的依赖可以使用ivy。</p>
+<p>在<a href="http://ant.apache.org/ivy/download.cgi" target="_blank" rel="external">这里</a>下载之后解压，把解压之后的<strong>ivy-x.x.x.jar</strong>文件copy到ant路径下的lib中就可以了。（也可以配置环境变来那个IVY_HOME</p>
+<p>之后可以去ivy的路径下，去看ivy给出的示例。</p>
+<p>在%IVY_HOME%\src\example\hello-ivy的位置执行ant，进行构建，这里有ivy.xml和build.xml。</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-3-2/40430531-file_1488451717180_9679.png" alt="img"></p>
+<p>可以看到从外部下载所依赖的文件，这些文件被缓存在用户.ivy2\cache目录下。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--ivy.xml--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">ivy-module</span> <span class="attr">version</span>=<span class="string">"2.0"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">info</span> <span class="attr">organisation</span>=<span class="string">"org.apache"</span> <span class="attr">module</span>=<span class="string">"hello-ivy"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span> <span class="attr">org</span>=<span class="string">"commons-lang"</span> <span class="attr">name</span>=<span class="string">"commons-lang"</span> <span class="attr">rev</span>=<span class="string">"2.0"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span> <span class="attr">org</span>=<span class="string">"commons-cli"</span> <span class="attr">name</span>=<span class="string">"commons-cli"</span> <span class="attr">rev</span>=<span class="string">"1.0"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">ivy-module</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>而在ant的build.xml中定义ivy任务实现调用ivy的功能，从而实现依赖管理的。只列出 调用ivy的功能</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"resolve"</span> <span class="attr">description</span>=<span class="string">"--&gt; retreive dependencies with ivy"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">ivy:retrieve</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">target</span>&gt;</span> </div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"report"</span> <span class="attr">depends</span>=<span class="string">"resolve"</span> <span class="attr">description</span>=<span class="string">"--&gt; generates a report of dependencies"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">ivy:report</span> <span class="attr">todir</span>=<span class="string">"$&#123;build.dir&#125;"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"clean-cache"</span> <span class="attr">description</span>=<span class="string">"--&gt; clean the ivy cache"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">ivy:cleancache</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">target</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>只需要在build.xml中引入ivy的空间声明就可以。</p>
+<h3 id="3-eclipse和IntelliJ-IDEA中也有相关的插件"><a href="#3-eclipse和IntelliJ-IDEA中也有相关的插件" class="headerlink" title="3.eclipse和IntelliJ IDEA中也有相关的插件"></a>3.eclipse和IntelliJ IDEA中也有相关的插件</h3><p>….略了啊</p>
+<hr>
+<h2 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h2><p>maven，是在ant之后Apache又发布的另一个构建工具，旨在解决ant使用中的一些问题。不过maven还是使用了xml文件，当然，和ant相比，改变了很多。ant更像是把构建项目中的每一个任务都写下来，每个任务中进行哪些命令也都写进去。那么maven关心什么呢？</p>
+<p><strong>1 依赖的管理</strong>：仅仅通过jar包的几个属性，就能确定唯一的jar包，在指定的文件pom.xml中，只要写入这些依赖属性，就会自动下载并管理jar包。</p>
+<p><strong>2 项目的构建</strong>：内置很多的插件与生命周期，支持多种任务，比如校验、编译、测试、打包、部署、发布…</p>
+<p><strong>3 项目的知识管理</strong>：管理项目相关的其他内容，比如开发者信息，版本等等</p>
+<h3 id="1-安装配置环境"><a href="#1-安装配置环境" class="headerlink" title="1.安装配置环境"></a>1.安装配置环境</h3><p>还是直接上手，下载配置环境。</p>
+<h3 id="2-构建简单的工程"><a href="#2-构建简单的工程" class="headerlink" title="2.构建简单的工程"></a>2.构建简单的工程</h3><table>
+<thead>
+<tr>
+<th>1</th>
+<th>mvn archetype:create -DgroupId=com.company.example -DartifactId=Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>这里的archetype是项目的模型，maven自身提供了一些项目模型，也可以通过archetype:generate进行选择。</p>
+<p>groupId和artifactId分别是公司组织名和项目名称。当然也可以加上多包的定义，-Dpackage=com.company.hellomaven。</p>
+<p>接着是maven的配置文件，maven对于工程的配置在pom.xml中。</p>
+<p>那么pom.xml的POM是指什么？</p>
+<p>POM(Project Object Model)是maven的核心思想。项目对象模型，这个文件中定义了工程的类型、名称、管理依赖关系、定制插件的行为。</p>
+<p>当一个大项目被分成几个小项目，每个小项目拥有自己的pom文件，然后有一个共同的父项目。只有构建父项目就能构建所有子项目。</p>
+<p>子项目的 POM 会继承父项目的 POM。另外，所有的 POM都继承了一个 Super-POM。Super-POM 设置了一些默认值，比如在上文提到的默认的目录结构，默认的插件等等，它遵循了惯例优于配置的原则。所以尽管我们的这个 POM 很简单，但是这只是你看得见的一部分。运行时候的 POM 要复杂的多。 如果你想看到运行时候的 POM 的全部内容的话，可以运行下面的命令：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$mvn help:effective-pom</div></pre></td></tr></table></figure>
+<p>关于pom.xml文件的编写，这里是一个pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">    <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 </span></div><div class="line">    http://maven.apache.org/maven-v4_0_0.xsd"&gt; </div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.honsen.test<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>first-maven<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>First Maven Project<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>第一行指定文档的xml、版本和编码；</p>
+<p>第二行即上面说到的每个pom.xml的核心元素——project</p>
+<p>其中的几个元素——</p>
+<p><em>1 modelVersion  这个元素指定了POM的版本，Maven2或者Maven3 都只能是4.0.0</em></p>
+<p><em>2 groupId  是项目组的ID，一般是com.公司组织名.项目名(比如com.honsen.test)</em></p>
+<p><em>3 artifactId  是该项目在项目组中的ID,比如当前的项目是项目组的一个代理项目，就可以叫做myproxy</em></p>
+<p><em>4 version  是项目的版本号，用于维护项目的升级和发布</em></p>
+<p><em>5 name  一般没有实际的用处，只是用于标识该项目</em></p>
+<p>在pom文件中，通过groudId、artifactId、packaging、version等maven坐标来确定一个项目。</p>
+<p>另外，一个工程总是需要依赖多个jar包，对于这种jar</p>
+<p>包的管理，称之为“依赖管理”。而怎么确定jar包的坐标？<strong>maven是通过groupId，artifactId，以及version确定一个唯一的jar包。例如常用的一个Junit的声明是:</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>那么这些jar的包从哪里获取？这里我称之为仓库。Maven中会涉及多种仓库。</p>
+<p><strong>1 工作空间</strong>，即我们的项目工程，这里面可能会放着pom.xml文件，这个pom.xml就是maven的配置文件</p>
+<p><strong>2 本地仓库</strong>，本地仓库用于存放jar包，其实Jar包并不是直接放入工作空间的，它是存放在本地仓库，然后在执行发布打包的时候，添加依赖路径</p>
+<p><strong>3 私库</strong>：私库是使用者自己搭建的maven仓库，用于缓解频繁从外网下载jar包资源的压力。而且使用私库作为缓存层，也相对安全一些。</p>
+<p><strong>4 共享仓库</strong>：书中所说的中央仓库或者一些常用的镜像网站都属于这种，国内比较著名的oschina以及163都是不错的maven仓库。</p>
+<p>当我们在pom.xml中声明了依赖关系后</p>
+<p>1 Maven在执行相关的任务时，会先去本地仓库查看是否有该资源，如果有的话，判断版本是否正确，如果一切都没问题则直接使用；否则，执行下一步</p>
+<p>2 Maven会去配置的共享仓库中查找，如果找到就拷贝到本地仓库中；找不到则会给出相关的提示</p>
+<p>3 Maven在本地如果搭建了私库，则会去私库中查找，找到就拷贝到本地仓库；找不到就会去共享仓库中查找，然后放入私库和本地库。有了私库，局域网内的开发者可以共享依赖，就不用每个人都去外网下载jar包，浪费带宽了。</p>
+<p>关于本地仓库和共享仓库的配置都在settings.xml中，这个文件位于conf中，如果没有则拷贝一份即可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>F:\apache-maven-3.3.9\repo<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>共享仓库的地址配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">id</span>&gt;</span>CN<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>OSChina Central<span class="tag">&lt;/<span class="name">name</span>&gt;</span>                           </div><div class="line">      <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.oschina.net/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><strong>Maven插件</strong></p>
+<p>我们用了 mvn archetype:generate 命令来生成一个项目。那么这里的 archetype:generate 是什么意思呢？archetype 是一个插件的名字，generate是目标(goal)的名字。这个命令的意思是告诉 maven 执行 archetype 插件的 generate 目标。插件目标通常会写成 <em>pluginId:goalId</em></p>
+<p>一个目标是一个工作单元，而插件则是一个或者多个目标的集合。比如说Jar插件，Compiler插件，Surefire插件等。从看名字就能知道，Jar 插件包含建立Jar文件的目标， Compiler 插件包含编译源代码和单元测试代码的目标。Surefire 插件的话，则是运行单元测试。</p>
+<p>因为mvn 本身不会做太多的事情，它不知道怎么样编译或者怎么样打包。它把构建的任务交给插件去做。插件定义了常用的构建逻辑，能够被重复利用。这样做的好处是，一旦插件有了更新，那么所有的 maven 用户都能得到更新。</p>
+<p><strong>生命周期</strong></p>
+<p>上面提到了maven的插件，那么就不得不说maven的生命周期。 上面说到了maven本事不会做太多事情，是指maven的生命周期是抽象的，实际工作由插件完成。</p>
+<p>运行的maven的每个步骤由它定义，相比较Ant需要自己去手工定义，一个固定的生命周期模板，预定义的行为让maven变得简单。而同时也一定失去了”灵活性”.</p>
+<p><strong>maven有三套相互独立的生命周期</strong>（之所以是相互独立，即你可以仅仅调用其中里面的一个）：</p>
+<p>clean：真正构建之前的清理工作；</p>
+<p>default：构建本事的核心内柔，会有编译、测试、打包、部署等内容；</p>
+<p>site：生成项目报告，站点，发布站点。</p>
+<p>每套生命周期由一组阶段  (Phase)组成，例如</p>
+<p><strong>clean</strong>-|</p>
+<p>|-pre-clean：执行一些需要在clean之前完成的工作</p>
+<p>|-clean：移除所有上一次构建生成的文件</p>
+<p>|-post-clean：执行一些需要在clean之后立刻完成的工作</p>
+<p>mvn clean中的clean就是指clean这一套生命周期中的clean阶段，在一个生命周期中运行某个阶段，这个阶段之前的阶段都会被运行。就是mvn clean实际执行了pre-clean和clean。</p>
+<p>同样的，</p>
+<p><strong>default</strong>-|</p>
+<p>|-validate</p>
+<p>|-generate-sources</p>
+<p>|-process-sources</p>
+<p>|-generate-resources</p>
+<p>|-process-resources     复制并处理资源文件，至目标目录，准备打包。</p>
+<p>|-compile     编译项目的源代码。</p>
+<p>|-process-classes</p>
+<p>|-generate-test-sources</p>
+<p>|-process-test-sources</p>
+<p>|-generate-test-resources</p>
+<p>|-process-test-resources     复制并处理资源文件，至目标测试目录。</p>
+<p>|-test-compile     编译测试源代码。</p>
+<p>|-process-test-classes</p>
+<p>|-test     使用合适的单元测试框架运行测试，这些测试代码不会被打包或部署。</p>
+<p>|-prepare-package</p>
+<p>|-package     接受编译好的代码，打包成可发布的格式，如 JAR ,WAR。</p>
+<p>|-pre-integration-test</p>
+<p>|-integration-test</p>
+<p>|-post-integration-test</p>
+<p>|-verify</p>
+<p>|-install     将包安装至本地仓库，以让其它项目依赖。</p>
+<p>|-deploy     将最终的包复制到远程的仓库，以让其它开发人员与项目共享。</p>
+<p><strong>site  </strong>–   |</p>
+<p>|-pre-site     执行一些需要在生成站点文档之前完成的工作</p>
+<p>|-site    生成项目的站点文档</p>
+<p>|-post-site     执行一些需要在生成站点文档之后完成的工作，并且为部署做准备</p>
+<p>|-site-deploy     将生成的站点文档部署到特定的服务器上</p>
+<p>在是用eclipse时也会有<strong>maven的插件</strong>来帮助使用。</p>
+<hr>
+<p>断断续续在笔记里整理了一段时间了，果然还是要po上来。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JVM-Java-Maven-Ant/">JVM,Java,Maven,Ant</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 Honsen
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

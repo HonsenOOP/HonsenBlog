@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>how2usespring | Honsen</title>
+
+  
+  <meta name="author" content="Honsen">
+  
+
+  
+  <meta name="description" content="记得当时是胡总强行替我装逼之后我写的，写的很渣，不过还是不删了。
+现在回归一下，这是当时做的一个商城的项目，用了Spring+SpringMVC+MyBatis，所以才有了这样的项目结构…
+
+不过正好可以总结一下，顺带更新一下 小站 2333。不过这个文章并不算是Spring的入门指南（从入门到放弃">
+  
+
+  
+  
+  <meta name="keywords" content="Spring,Web">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="how2usespring"/>
+
+  <meta property="og:site_name" content="Honsen"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Honsen" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Honsen</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>how2usespring</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/04/23/how2usespring/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-04-23T07:06:37.000Z">
+          2016-04-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>记得当时是胡总强行替我装逼之后我写的，写的很渣，不过还是不删了。</p>
+<p>现在回归一下，这是当时做的一个商城的项目，用了Spring+SpringMVC+MyBatis，所以才有了这样的项目结构…</p>
+<hr>
+<p>不过正好可以总结一下，顺带更新一下 小站 2333。不过这个文章并不算是Spring的入门指南<del>（从入门到放弃）</del>?，只是简单讲一下我们在项目中如何使用Spring框架的。</p>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><p>首先来看看我们这个项目的结构（细节不讲）</p>
+<p>config–项目的基本配置信息。调试日志的样式，jdbc的连接信息等配置文件</p>
+<p>src–后台的源码部分</p>
+<p>mqys–config ?定义一些常量接口之类的</p>
+<p>–controller ?控制器</p>
+<p>–entitys ?实体类</p>
+<p>–mapper mapper层面（怎么翻译</p>
+<p>–service ?– 服务层接口</p>
+<p>–impl实例化方法</p>
+<p>–utils ?工具包类</p>
+<p>WebRoot–资源文件，前端文件</p>
+<p>以上是我们项目的结构</p>
+<h2 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h2><p>数据库层面—&gt;service层面—&gt;controller（前后台对接）</p>
+<p>数据库层面</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/47322611.jpg" alt=""></p>
+<p>首先是entity层，oop嘛，把数据库中的每个表对应成一个实体类，比如Banner对应数据库中的t_banner。</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/9632654.jpg" alt=""></p>
+<p>里面是seter和getter方法</p>
+<p>码完entity层之后，开始mapper层面，mapper层面是数据库对接的一层</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/59560804.jpg" alt=""></p>
+<p>每个mapper对应一个相应的entity</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/9525249.jpg" alt=""></p>
+<p>里面的结构大致是酱紫，Spring使用 标签给我们提供了很大的便利见下图（QQ截图没有括号 差评。。。然后自己画出来怎么又一丝猥琐，，，</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/48009713.jpg" alt=""></p>
+<p>在mapper层里进行了和数据库的对接，当然这里不必写一堆的方法，可以直接传一个sql语句，直接根据sql语句来实现重载的功能（mapper不要用重载，程序会不知道你调用的到底是哪个方法。</p>
+<p>mapper层面结束之后，是service层</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/77241816.jpg" alt=""></p>
+<p>这里根据需要，划分成不同的service，例如AdService.java中是定义了所有广告类方法的接口，impl是接口方法的实现。</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/20990582.jpg" alt=""></p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/26781701.jpg" alt=""></p>
+<p>这里可以看到</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/20834168.jpg" alt=""></p>
+<p>标签对应，即通过标签来标识连接</p>
+<p>具体的细节需要进行架构时多多考虑。</p>
+<p>最后是controller层面，这时候和view层面的结合开发，前端人员写完html文件之后，后台人员(like me)<del>拉上前端人员一起</del>把html修改为jsp。</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/74874842.jpg" alt=""></p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/5344191.jpg" alt=""></p>
+<p>controller中可以通过返回map，对应到jsp</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/84470630.jpg" alt=""></p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-6-24/15902476.jpg" alt=""></p>
+<p>返回一个ModelAndView就是加载一个页面，在方法里通过service的方法调用来加载数据，并返回到页面上。所以一个ModelAndView方法对应一个前端页面。</p>
+<h2 id="讲道理的话"><a href="#讲道理的话" class="headerlink" title="讲道理的话"></a>讲道理的话</h2><p>我讲的东西只是我们在项目中运用Spring框架的实例，属于强行上手型，更多知识和方法可以来<a href="https://www.zhihu.com/question/21142149" target="_blank" rel="external">这里</a>看看。收工，滚去拆炸弹了</p>
+<p><img src="http://olx8425kh.bkt.clouddn.com/17-2-25/46379359-file_1488011225660_f24e.jpg" alt=""></p>
+<p><del>最后，在这里强烈谴责胡总这种强行替别人装逼的行为。。。果然这事还是不说的好</del></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Spring-Web/">Spring,Web</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 Honsen
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
